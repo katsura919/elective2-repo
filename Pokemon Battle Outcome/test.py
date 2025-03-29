@@ -57,7 +57,12 @@ features, first_pokemon_name, second_pokemon_name = get_features(first_pokemon, 
 
 if features:
     features = np.array(features).reshape(1, -1)
-    prediction = model.predict(features)
-    winner = first_pokemon if prediction[0][0] > 0.5 else second_pokemon
-    winner_name = first_pokemon_name if prediction[0][0] > 0.5 else second_pokemon_name
+    prediction = model.predict(features)[0][0]  # Extract the probability
+
+    confidence = prediction if prediction > 0.5 else 1 - prediction  # Get confidence level
+    winner = first_pokemon if prediction > 0.5 else second_pokemon
+    winner_name = first_pokemon_name if prediction > 0.5 else second_pokemon_name
+
     print(f"Predicted Winner: {winner_name} (Pokémon ID {winner})")
+    print(f"Confidence Level: {confidence * 100:.2f}%")
+
